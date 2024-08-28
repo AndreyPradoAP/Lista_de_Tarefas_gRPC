@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "/proto";
+
+service TaskList {
+    rpc AddTask (Task) returns (Void);
+    rpc DoneTask (IdTask) returns (Void);
+    rpc ListTasks (Void) returns (Tasks);
+    rpc DeleteTask (Void) returns (Void);
+}
+
+message Void { }
+
+message IdTask {
+    int32 id = 1;
+}
+
+message Task {
+    string task = 1;
+}
+
+message Tasks {
+    repeated string task = 1;
+}
