@@ -35,17 +35,24 @@ func userScreen(client proto.TaskListClient, ctx context.Context) {
 
 		switch choice {
 		case 1:
-			fmt.Printf("Adição de tarefa escolhida\n")
+			// Por algum motivo, a função funciona nos primeiros segundos de funcionamento, depois para de enviar as requisições por conta do seguinte erro: 
+			// rpc error: code = DeadlineExceeded desc = context deadline exceeded (MESMO ENSTANDO NO LOCALHOST)
+			fmt.Printf("\nAdição de tarefa escolhida\n")
 			_, err := client.AddTask(ctx, &proto.Task{Task: "Treco pra fazer"})
 			if err != nil {
 				errorMessage(err)
 			} else {
-				fmt.Printf("Tarefa adicionada à lista com exito!\n")
+				fmt.Printf("Tarefa adicionada à lista com exito!\n\n")
 			}
 
 		case 2:
-			//doneTask()
-			fmt.Println("case 2")
+			fmt.Printf("\nConclusão de tarefa escolhida\n")
+			_, err := client.DoneTask(ctx, &proto.IdTask{Id: 1})
+			if err != nil {
+				errorMessage(err)
+			} else {
+				fmt.Printf("Tarefa %d concluída com sucesso!\n\n", 6)
+			}
 		case 3:
 			fmt.Println("case 3")
 		case 4:

@@ -104,14 +104,8 @@ func serverDoneTask(id string) error {
 		return err
 	}
 	defer newToDoFile.Close()
-	for num, line := range lines {
-		println(num)
-		println(line)
+	for _, line := range lines {
 		_, _ = newToDoFile.WriteString(line + "\n")
-
-		/*if err != nil {
-			return err
-		}*/
 	}
 
 	return err
