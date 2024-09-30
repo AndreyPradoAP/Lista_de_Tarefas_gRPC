@@ -37,8 +37,6 @@ func userScreen(client proto.TaskListClient, ctx context.Context) {
 
 		switch choice {
 		case 1:
-			// Por algum motivo, a função funciona nos primeiros segundos de rodagem, depois para de enviar as requisições por conta do seguinte erro:
-			// rpc error: code = DeadlineExceeded desc = context deadline exceeded (MESMO ESTANDO NO LOCALHOST)
 			scanner := bufio.NewScanner(os.Stdin)
 			fmt.Printf("\nAdição de tarefa escolhida\n")
 			fmt.Printf("\tDigite a descrição da nova tarefa\n\t:>")

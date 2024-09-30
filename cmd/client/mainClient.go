@@ -21,6 +21,7 @@ func main() {
 
 	flag.Parse()
 	conn, err := grpc.NewClient(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

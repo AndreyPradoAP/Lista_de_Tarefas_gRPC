@@ -1,6 +1,6 @@
 module ListTask/grpc
 
-go 1.22.6
+go 1.21.13
 
 require (
 	golang.org/x/net v0.25.0 // indirect
