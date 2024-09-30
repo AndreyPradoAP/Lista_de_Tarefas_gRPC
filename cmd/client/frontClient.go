@@ -6,13 +6,15 @@ package main
 
 import (
 	"ListTask/grpc/proto"
+	"bufio"
 	"context"
 	"fmt"
+	"os"
 )
 
-func clientAddTask() {
+/*func clientAddTask() {
 
-}
+}*/
 
 func errorMessage(err error) {
 	fmt.Printf("Erro ao executar tarefa: %s\n", err)
@@ -35,28 +37,59 @@ func userScreen(client proto.TaskListClient, ctx context.Context) {
 
 		switch choice {
 		case 1:
-			// Por algum motivo, a função funciona nos primeiros segundos de funcionamento, depois para de enviar as requisições por conta do seguinte erro: 
-			// rpc error: code = DeadlineExceeded desc = context deadline exceeded (MESMO ENSTANDO NO LOCALHOST)
+			// Por algum motivo, a função funciona nos primeiros segundos de rodagem, depois para de enviar as requisições por conta do seguinte erro:
+			// rpc error: code = DeadlineExceeded desc = context deadline exceeded (MESMO ESTANDO NO LOCALHOST)
+			scanner := bufio.NewScanner(os.Stdin)
 			fmt.Printf("\nAdição de tarefa escolhida\n")
-			_, err := client.AddTask(ctx, &proto.Task{Task: "Treco pra fazer"})
+			fmt.Printf("\tDigite a descrição da nova tarefa\n\t:>")
+			scanner.Scan()
+			descTask := scanner.Text()
+			_, err := client.AddTask(ctx, &proto.Task{Task: descTask})
 			if err != nil {
 				errorMessage(err)
-			} else {
-				fmt.Printf("Tarefa adicionada à lista com exito!\n\n")
+				break
 			}
 
+			fmt.Printf("Tarefa adicionada à lista com exito!\n\n")
+
 		case 2:
+			var doneTaskInd int
 			fmt.Printf("\nConclusão de tarefa escolhida\n")
-			_, err := client.DoneTask(ctx, &proto.IdTask{Id: 1})
+			fmt.Printf("\tDigite o índice da tarefa a ser concluída\n\t:>")
+			fmt.Scanf("%d", &doneTaskInd)
+			_, err := client.DoneTask(ctx, &proto.IdTask{Id: int32(doneTaskInd)})
 			if err != nil {
 				errorMessage(err)
-			} else {
-				fmt.Printf("Tarefa %d concluída com sucesso!\n\n", 6)
+				break
 			}
+
+			fmt.Printf("Tarefa %d concluída com sucesso!\n\n", doneTaskInd)
+
 		case 3:
-			fmt.Println("case 3")
+			fmt.Printf("\nListagem de tarefa escolhida\n")
+			tasks, err := client.ListTasks(ctx, &proto.Void{})
+
+			if err != nil {
+				errorMessage(err)
+				break
+			}
+
+			for _, line := range tasks.GetTask() {
+				fmt.Printf("\t%s\n", line)
+			}
+
+			fmt.Printf("\nListagem realizada com sucesso!\n\n")
 		case 4:
-			fmt.Println("case 4")
+			fmt.Printf("Exclusão de tarefas escolhida\n")
+			_, err := client.DeleteTask(ctx, &proto.Void{})
+
+			if err != nil {
+				errorMessage(err)
+				break
+			}
+
+			fmt.Printf("\nExclusão realizada com sucesso!\n\n")
+
 		case 5:
 			fmt.Println("Programa encerrado!")
 			return

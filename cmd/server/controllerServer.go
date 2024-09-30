@@ -31,7 +31,7 @@ func serverAddTask(task string) (err error) {
 
 	// Read last line in file
 	scannerFile := bufio.NewScanner(toDoFile)
-	var lineCount int
+	var lineCount int = 0
 	var lastLine string
 	for scannerFile.Scan() {
 		lineCount++
@@ -128,6 +128,12 @@ func serverListTasks() ([]string, error) {
 	var strTaskList []string = make([]string, 0)
 	for scannerFile.Scan() {
 		line := scannerFile.Text()
+
+		if strings.Contains(line, "|||") {
+			line = strings.Replace(line, "|||", "-", 1)
+			line = "X " + line + " X"
+		}
+
 		strTaskList = append(strTaskList, line)
 	}
 
